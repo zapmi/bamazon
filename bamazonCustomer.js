@@ -1,5 +1,7 @@
 let mysql = require("mysql");
 let inquirer = require("inquirer");
+var Table = require("cli-table");
+
 
 let connection = mysql.createConnection({
     host: "localhost",
@@ -18,7 +20,7 @@ let connection = mysql.createConnection({
 connection.connect(function (err) {
     if (err) throw err;
     // console.log("connected as id " + connection.threadId + "\n");
-    start();
+    // start();
 });
 
 
@@ -34,35 +36,7 @@ function start() {
         .then(function (answer) {
             // based on their answer, either call the bid or the post functions
             if (answer.purchasing === "YES") {
-                connection.query("SELECT * FROM products", function (err, res) {
-                    if (err) throw err;
-                    // Log all results of the SELECT statement
-                    console.log(res);
-                    inquirer
-                        .prompt([
-                            {
-                                name: "id_of_product",
-                                type: "input",
-                                message: "What is the ID of the product you would like to buy?",
-                                
-                                
-                            },
-                            {
-                                name: "item_Quantity",
-                                type: "input",
-                                message: "How many units of this product would you like to buy?",
-                                
-                                
-                            },
-
-                        ]).then(function (answers) {
-                            let itemID = answers.id_of_product;
-                            let itemQuantity = answers.item_Quantity;
-                            purchaseOrder(id_of_product, item_Quantity);
-                        });
-
-                    // connection.end();
-                });
+                displayItems();
 
             }
             else if (answer.purchasing === "NO") {
@@ -72,15 +46,45 @@ function start() {
         });
 }
 
-function readProducts() {
-    // console.log("Showing all products...\n");
+function displayItems() {
     connection.query("SELECT * FROM products", function (err, res) {
         if (err) throw err;
+        var displayTable = new Table ({
+			head: ["Item ID", "Product Name", "Catergory", "Price", "Quantity"]
+			
+        });
+        for(var i = 0; i < res.length; i++){
+			displayTable.push(
+				[res[i].item_id,res[i].product_name, res[i].department_name, res[i].price, res[i].stock_quantity]
+				);
+		}
+		console.log(displayTable.toString());
+        
+
         // Log all results of the SELECT statement
-        console.log(res);
-        connection.end();
+        // console.log(res);
+        inquirer
+            .prompt([
+                {
+                    name: "id_of_product",
+                    type: "input",
+                    message: "What is the ID of the product you would like to buy?",
+                },
+                {
+                    name: "item_Quantity",
+                    type: "input",
+                    message: "How many units of this product would you like to buy?",
+                },
+
+            ]).then(function (answers) {
+                let itemID = answers.id_of_product;
+                let itemQuantity = answers.item_Quantity;
+                purchaseOrder(id_of_product, item_Quantity);
+            });
+
+        // connection.end();
     });
 }
 
-
+start();
 
