@@ -1,6 +1,3 @@
-bamazonCustomer.js
-
-
 var mysql = require("mysql");
 var inquirer = require("inquirer");
 
@@ -41,7 +38,7 @@ function start() {
                     if (err) throw err;
                     // Log all results of the SELECT statement
                     console.log(res);
-                    connection.end();
+                    // connection.end();
                 });
                 // readProducts();
             }
