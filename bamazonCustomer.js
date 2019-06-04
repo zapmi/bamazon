@@ -1,7 +1,7 @@
-var mysql = require("mysql");
-var inquirer = require("inquirer");
+let mysql = require("mysql");
+let inquirer = require("inquirer");
 
-var connection = mysql.createConnection({
+let connection = mysql.createConnection({
     host: "localhost",
 
     // Your port; if not 3306
@@ -38,12 +38,35 @@ function start() {
                     if (err) throw err;
                     // Log all results of the SELECT statement
                     console.log(res);
+                    inquirer
+                        .prompt([
+                            {
+                                name: "id_of_product",
+                                type: "input",
+                                message: "What is the ID of the product you would like to buy?",
+                                
+                                
+                            },
+                            {
+                                name: "item_Quantity",
+                                type: "input",
+                                message: "How many units of this product would you like to buy?",
+                                
+                                
+                            },
+
+                        ]).then(function (answers) {
+                            let itemID = answers.id_of_product;
+                            let itemQuantity = answers.item_Quantity;
+                            purchaseOrder(id_of_product, item_Quantity);
+                        });
+
                     // connection.end();
                 });
-                // readProducts();
+
             }
             else if (answer.purchasing === "NO") {
-                console.log("Goodbye, Come back soon")
+                console.log("Come back soon, Goodbye")
                 connection.end();
             }
         });
@@ -61,39 +84,3 @@ function readProducts() {
 
 
 
-
-function postAuction() {
-    // prompt for info about the item being put up for auction
-    inquirer
-        .prompt([
-            {
-                name: "itemID",
-                type: "input",
-                message: "What is the item ID of the product you would like to buy?"
-            },
-            {
-                name: "productQuantity",
-                type: "input",
-                message: "How many units of this product would you like to buy?"
-            },
-
-        ])
-        .then(function (answer) {
-            // when finished prompting, insert a new item into the db with that info
-            connection.query(
-                "INSERT INTO auctions SET ?",
-                {
-                    item_name: answer.item,
-                    category: answer.category,
-                    starting_bid: answer.startingBid || 0,
-                    highest_bid: answer.startingBid || 0
-                },
-                function (err) {
-                    if (err) throw err;
-                    console.log("Your auction was created successfully!");
-                    // re-prompt the user for if they want to bid or post
-                    start();
-                }
-            );
-        });
-}
