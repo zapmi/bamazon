@@ -103,15 +103,55 @@ function addedItem(ID, amount) {
         if (amount > 0) {
             connection.query("UPDATE products SET stock_quantity = stock_quantity + " + amount + " WHERE item_id = " + ID);
         }
-        // } else if (amount <= res[0].stock_quantity) {
-        //     var totalCost = res[0].price * amount;
-        //     console.log("Your total cost for " + amount + " " + res[0].product_name + "(s) is $" + totalCost + ", Thank you!");
-        //     connection.query("UPDATE products SET stock_quantity = stock_quantity - " + amount + " WHERE item_id = " + ID);
-        // }
         displayItems();
     });
-
-    // connection.end();
 }
+
+function addNewProduct() {
+    inquirer
+        .prompt([
+            {
+                name: "item_id",
+                type: "input",
+                message: "What is the ID of this product?",
+            },
+            {
+                name: "product_name",
+                type: "input",
+                message: "What is the name of the product you would like to add?",
+            },
+            {
+                name: "item_Quantity",
+                type: "input",
+                message: "What category does this belong to?",
+            },
+            {
+                name: "product_price",
+                type: "input",
+                message: "How much does this product cost?",
+            },
+            {
+                name: "product_quantity",
+                type: "input",
+                message: "How many do you want to add to inventory?",
+            },
+
+        ]).then(function (answer) {
+            let productID = answer.item_id;
+            let productName = answer.product_name;
+            let itemQuantity = answer.item_Quantity;
+            let productPrice = answer.product_price;
+            let productQuantity = answer.product_quantity
+            addProductToTable(productID, productName, itemQuantity, productPrice, productQuantity);
+
+            // displayItems();
+        });
+
+}
+
+function addProductToTable(productID, productName, itemQuantity, productPrice, productQuantity){
+    connection.query('INSERT INTO products (productID,item_id,product_name,department_name,price,stock_quantity) VALUES("' + productID + '","' + productName + '","' + itemQuantity + '","' + productPrice + '",' + productQuantity +  ')');
+    displayItems();
+};
 
 start();
