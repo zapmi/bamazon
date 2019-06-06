@@ -154,21 +154,4 @@ function addedItem(productName, itemCategory, productPrice, productQuantity) {
 };
 
 
-
-
-
-// displayItems();
-
-
-
-
-
-
-
-
-// function addProductToTable(productID, productName, itemQuantity, productPrice, productQuantity){
-//     connection.query('INSERT INTO products (productID,item_id,product_name,department_name,price,stock_quantity) VALUES("' + productID + '","' + productName + '","' + itemQuantity + '","' + productPrice + '",' + productQuantity +  ')');
-//     displayItems();
-// };
-
 start();
