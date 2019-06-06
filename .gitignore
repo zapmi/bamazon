@@ -1,4 +1,4 @@
 node_modules/*
-bamazon.sql/*
+bamazon.sql
 package.json
 package-lock.json
