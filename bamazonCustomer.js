@@ -13,7 +13,7 @@ let connection = mysql.createConnection({
 
 connection.connect(function (err) {
     if (err) throw err;
-    console.log("connected as id " + connection.threadId + "\n");
+    // console.log("connected as id " + connection.threadId + "\n");
 });
 
 function start() {
@@ -65,18 +65,33 @@ function secondPrompts() {
                 message: "How many units of this product would you like to buy?",
             },
 
-        ]).then(function (answers) {
-            let itemID = answers.id_of_product;
-            let itemQuantity = answers.item_Quantity;
-            purchasedItem(id_of_product, item_Quantity);
+        ]).then(function (answer) {
+            let itemID = answer.id_of_product;
+            let itemQuantity = answer.item_Quantity;
+            purchasedItem(itemID, itemQuantity);
         });
 }
 
-function purchasedItem(id, amount){
-    connection.query('Select * FROM products WHERE item_id = ' + id, function(err, res){
-        if(err){console.log(err)};
-    })
+function purchasedItem(ID, amount) {
+    connection.query('Select * FROM products WHERE item_id = ' + ID, function (err, res) {
+        if (err) {
+            console.log(err)
+        }
+        if (amount <= res[0].stock_quantity) {
+            var totalCost = res[0].price * amount;
+
+            console.log("Your total cost for " + amount + " " + res[0].product_name + " is $" + totalCost + ", Thank you!");
+            connection.query("UPDATE products SET stock_quantity = stock_quantity - " + amount + " WHERE item_id = " + ID);
+        }else{
+
+            console.log("Insufficient quantity, looks like we don't have enough " + res[0].product_name + " to complete your order.");
+        }
+        displayItems();
+    });           
+        
+    // connection.end();
 }
+
 
 start();
 
