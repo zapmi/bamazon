@@ -77,18 +77,17 @@ function purchasedItem(ID, amount) {
         if (err) {
             console.log(err)
         }
-        if (amount <= res[0].stock_quantity) {
+        if (amount > res[0].stock_quantity) {
+            console.log("Insufficient quantity! Try again!");
+
+        } else if (amount <= res[0].stock_quantity) {
             var totalCost = res[0].price * amount;
-
-            console.log("Your total cost for " + amount + " " + res[0].product_name + " is $" + totalCost + ", Thank you!");
+            console.log("Your total cost for " + amount + " " + res[0].product_name + "(s) is $" + totalCost + ", Thank you!");
             connection.query("UPDATE products SET stock_quantity = stock_quantity - " + amount + " WHERE item_id = " + ID);
-        }else{
-
-            console.log("Insufficient quantity, looks like we don't have enough " + res[0].product_name + " to complete your order.");
         }
         displayItems();
-    });           
-        
+    });
+
     // connection.end();
 }
 
