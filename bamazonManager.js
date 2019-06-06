@@ -89,12 +89,12 @@ function addInventory() {
         ]).then(function (answer) {
             let itemID = answer.id_of_product;
             let itemQuantity = answer.item_Quantity;
-            addedItem(itemID, itemQuantity);
+            updateItem(itemID, itemQuantity);
         });
 
 }
 
-function addedItem(ID, amount) {
+function updateItem(ID, amount) {
     connection.query('Select * FROM products WHERE item_id = ' + ID, function (err, res) {
         if (err) {
             console.log(err)
@@ -110,48 +110,65 @@ function addedItem(ID, amount) {
 function addNewProduct() {
     inquirer
         .prompt([
+            // {
+            //     name: "item_id",
+            //     type: "input",
+            //     message: "What is the ID of this product?",
+            // },
             {
-                name: "item_id",
-                type: "input",
-                message: "What is the ID of this product?",
-            },
-            {
-                name: "product_name",
+                name: "addName",
                 type: "input",
                 message: "What is the name of the product you would like to add?",
             },
             {
-                name: "item_Quantity",
+                name: "addItemCategory",
                 type: "input",
                 message: "What category does this belong to?",
             },
             {
-                name: "product_price",
+                name: "addProductPrice",
                 type: "input",
                 message: "How much does this product cost?",
             },
             {
-                name: "product_quantity",
+                name: "addProductQuantity",
                 type: "input",
                 message: "How many do you want to add to inventory?",
-            },
+            }
 
         ]).then(function (answer) {
-            let productID = answer.item_id;
-            let productName = answer.product_name;
-            let itemQuantity = answer.item_Quantity;
-            let productPrice = answer.product_price;
-            let productQuantity = answer.product_quantity
-            addProductToTable(productID, productName, itemQuantity, productPrice, productQuantity);
-
-            // displayItems();
+            // let productID = answer.item_id;
+            let productName = answer.addName;
+            let itemCategory = answer.addItemCategory;
+            let productPrice = answer.addProductPrice;
+            let productQuantity = answer.addProductQuantity;
+            addedItem(productName, itemCategory, productPrice, productQuantity);
         });
-
 }
 
-function addProductToTable(productID, productName, itemQuantity, productPrice, productQuantity){
-    connection.query('INSERT INTO products (productID,item_id,product_name,department_name,price,stock_quantity) VALUES("' + productID + '","' + productName + '","' + itemQuantity + '","' + productPrice + '",' + productQuantity +  ')');
+
+function addedItem(productName, itemCategory, productPrice, productQuantity) {
+    connection.query('INSERT INTO products (item_id,product_name,department_name,price,stock_quantity) VALUES("'  + productName + '","' + itemCategory + '",' + productPrice + ',' + productQuantity + ')');
     displayItems();
+
 };
+
+
+
+
+
+// displayItems();
+
+
+
+
+
+
+
+
+// function addProductToTable(productID, productName, itemQuantity, productPrice, productQuantity){
+//     connection.query('INSERT INTO products (productID,item_id,product_name,department_name,price,stock_quantity) VALUES("' + productID + '","' + productName + '","' + itemQuantity + '","' + productPrice + '",' + productQuantity +  ')');
+//     displayItems();
+// };
 
 start();
