@@ -77,6 +77,9 @@ function purchasedItem(ID, amount) {
         if (err) {
             console.log(err)
         }
+        // if (ID !== res[0].item_id){
+        //     console.log("Not an ID number");
+        // }
         if (amount > res[0].stock_quantity) {
             console.log("Insufficient quantity! Try again!");
 
