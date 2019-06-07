@@ -1,6 +1,6 @@
 let mysql = require("mysql");
 let inquirer = require("inquirer");
-var Table = require("cli-table");
+
 
 let connection = mysql.createConnection({
     host: "localhost",
@@ -40,15 +40,7 @@ function start() {
 function displayItems() {
     connection.query("SELECT * FROM products", function (err, res) {
         if (err) throw err;
-        var displayTable = new Table({
-            head: ["Item ID", "Product Name", "Category", "Price", "Quantity"]
-        });
-        for (var i = 0; i < res.length; i++) {
-            displayTable.push(
-                [res[i].item_id, res[i].product_name, res[i].department_name, res[i].price, res[i].stock_quantity]
-            );
-        }
-        console.log(displayTable.toString());
+        console.table(res);
         // secondPrompts();
         start();
     });
@@ -57,15 +49,7 @@ function displayItems() {
 function lowInventory() {
     connection.query("SELECT * FROM products WHERE stock_quantity<=5", function (err, res) {
         if (err) throw err;
-        var displayTable = new Table({
-            head: ["Item ID", "Product Name", "Category", "Price", "Quantity"]
-        });
-        for (var i = 0; i < res.length; i++) {
-            displayTable.push(
-                [res[i].item_id, res[i].product_name, res[i].department_name, res[i].price, res[i].stock_quantity]
-            );
-        }
-        console.log(displayTable.toString());
+        console.table(res);
         // secondPrompts();
         start();
     });

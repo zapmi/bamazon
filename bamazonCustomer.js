@@ -1,6 +1,5 @@
 let mysql = require("mysql");
 let inquirer = require("inquirer");
-var Table = require("cli-table");
 
 
 let connection = mysql.createConnection({
@@ -38,15 +37,16 @@ function start() {
 function displayItems() {
     connection.query("SELECT * FROM products", function (err, res) {
         if (err) throw err;
-        var displayTable = new Table({
-            head: ["Item ID", "Product Name", "Category", "Price", "Quantity"]
-        });
-        for (var i = 0; i < res.length; i++) {
-            displayTable.push(
-                [res[i].item_id, res[i].product_name, res[i].department_name, res[i].price, res[i].stock_quantity]
-            );
-        }
-        console.log(displayTable.toString());
+        console.table(res);
+        // var displayTable = new Table({
+        //     head: ["Item ID", "Product Name", "Category", "Price", "Quantity"]
+        // });
+        // for (var i = 0; i < res.length; i++) {
+        //     displayTable.push(
+        //         [res[i].item_id, res[i].product_name, res[i].department_name, res[i].price, res[i].stock_quantity]
+        //     );
+        // }
+        // console.log(displayTable.toString());
         secondPrompts();
     });
 }
@@ -82,9 +82,11 @@ function purchasedItem(ID, amount) {
 
             console.log("Your total cost for " + amount + " " + res[0].product_name + " is $" + totalCost + ", Thank you!");
             connection.query("UPDATE products SET stock_quantity = stock_quantity - " + amount + " WHERE item_id = " + ID);
+            
         }else{
 
             console.log("Insufficient quantity, looks like we don't have enough " + res[0].product_name + " to complete your order.");
+            
         }
         displayItems();
     });           
