@@ -96,7 +96,7 @@ function addNewProduct() {
             //     name: "item_id",
             //     type: "input",
             //     message: "What is the ID of this product?",
-            // },`
+            // },
             {
                 name: "addName",
                 type: "input",
